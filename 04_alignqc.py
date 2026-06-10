@@ -384,23 +384,23 @@ def helper_block():
 
 def main():
 
-    # # === Concatenate alignment quality control files and plot ===
-    # alignqc_block()
+    # === Concatenate alignment quality control files and plot ===
+    alignqc_block()
 
-    # # === Perform sample validation using observed and genetic sex comparisons ===
-    # templist = [("clean", "riptide"), ("impute", "riptide"), ("clean", "gbs"), ("impute", "gbs")]
-    # templist = [("clean", "riptide"), ("impute", "riptide")]
-    # for stage, seq_method in templist:
-    #     sexqc_block(
-    #         stage=stage, 
-    #         seq_method=seq_method
-    #         )
+    # === Perform sample validation using observed and genetic sex comparisons ===
+    templist = [("clean", "riptide"), ("impute", "riptide"), ("clean", "gbs"), ("impute", "gbs")]
+    templist = [("clean", "riptide"), ("impute", "riptide")]
+    for stage, seq_method in templist:
+        sexqc_block(
+            stage=stage, 
+            seq_method=seq_method
+            )
 
     # === Create various input files for STITCH ===
-    # stitch_block()
+    stitch_block()
 
     # === Create various input files for downstream processes ===
-    # helper_block()
+    helper_block()
 
 
 ##############################################################################################################################################################################
