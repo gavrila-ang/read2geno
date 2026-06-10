@@ -274,23 +274,6 @@ def main():
             ], check=True)
 
 
-    elif args.step == "10":
-        run_type = "abv"
-        qc_outdir = f"{round_directory}/output/08_plink_qc"
-
-        print(f"Running Step 10: Plot PLINK QC....")
-        subprocess.run([
-            "sbatch", "-J", "10_publication",
-            "-o", f"{round_directory}/logs/10_publication/{dtnow}-%A-%a.o",
-            "-e", f"{round_directory}/logs/10_publication/{dtnow}-%A-%a.e",
-            "-N", "1", "-c", str(ncpu), f"--mem-per-cpu={mpc}G",
-            "-t", "48:00:00",
-            "-A", allocation, "-p", partition, "-q", qos,
-            f"--exclude={exclude_nodes}",
-            "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/10_publication.py {qc_outdir} {run_type}'"
-            ], check=True)
-
-
 
 ##############################################################################################################################################################################
 
