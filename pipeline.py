@@ -200,7 +200,7 @@ def main():
                 "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/06_snp_filter.py {chromvar} {stitch_directory} {outdir}'"
                 ], check=True)
 
-
+    # === Run Step 7: Perform quality control on samples and create a list of non-viable samples ===
     elif args.step == "7":
         
         # Additional user arguments
@@ -209,7 +209,7 @@ def main():
         mer_threshold = 0.05    
         missingness_threshold = 10    
 
-        # Short python function to combine the create_sampleqc_summary across all chromosomes to create an aggregated bad_samples.tsv
+        # Short python function to aggregate samples statistics across all chromosomes
         utils.sampleqc_wrangling.bad_samples(snp_filtered_outdir=snp_filtered_outdir, snp_and_sample_filtered_outdir=snp_and_sample_filtered_outdir, current_round=current_round)
 
         chrom_list = list(range(1, 21)) + ['X', 'Y', 'M']                
