@@ -175,7 +175,7 @@ def main():
             shell=True
          )
 
-
+    # === Run Step 6: Perform quality control on SNPs and samples and create a list of non-viable SNPs ===
     elif args.step == "6":
 
         # Additional user arguments
@@ -200,7 +200,7 @@ def main():
                 "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/06_snp_filter.py {chromvar} {stitch_directory} {outdir}'"
                 ], check=True)
 
-    # === Run Step 7: Perform quality control on samples and create a list of non-viable samples ===
+    # === Run Step 7: Perform quality control on SNPs and samples and create a list of non-viable samples ===
     elif args.step == "7":
         
         # Additional user arguments
