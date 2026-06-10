@@ -1,0 +1,9 @@
+01_metqc
+02_demux
+03_sample_processing
+04_align_qc
+05_stitch
+06_snp_filter
+07_sample_filter
+08_schema
+09_publication

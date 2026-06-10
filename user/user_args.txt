@@ -1,0 +1,122 @@
+#!/bin/bash
+
+# =============================================================================
+# USER CONFIGURATION FILE
+# Genotyping pipeline parameters for HPC execution.
+# Edit the values below to match your system and project setup before running.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# HPC / SLURM PARAMETERS
+# Cluster job scheduling settings. Adjust based on your HPC allocation and
+# available resources.
+# -----------------------------------------------------------------------------
+
+# Your HPC cluster username
+username="captainclark"
+
+# Cluster allocation/account to charge compute time against
+allocation="async"
+
+# SLURM partition to submit jobs to (e.g. gpu, himem)
+partition="himem"
+
+# Quality of Service tier
+qos="test"
+
+# Name of the conda environment for the main pipeline steps
+conda_env="poolroom"
+
+# Name of the conda environment for STITCH genotype imputation
+stitch_env="eternalsuburbia"
+
+# Number of CPUs to request per job
+ncpu=16
+
+# Max number of parallel jobs to run concurrently
+mpc=4
+
+# Comma-separated list of nodes to exclude from job scheduling
+exclude_nodes="level-b1-[01-16]"
+
+
+# -----------------------------------------------------------------------------
+# PROJECT DIRECTORIES
+# Absolute paths to input/output locations on your HPC filesystem.
+# All directories must exist before running the pipeline.
+# -----------------------------------------------------------------------------
+
+# Label for the current sequencing/genotyping round
+current_round="thebackrooms"
+
+# Root output directory for this round
+round_directory="/path/to/output/directory"
+
+# Directory containing raw FASTQ sequencing files
+sequencing_data="/path/to/sequencing/data/directory"
+
+# Directory where per-flowcell outputs are written
+flowcells_directory="/path/to/output/flowcells/directory"
+
+# Path to the root of this pipeline repository
+code="/path/to/this/codebase"
+
+
+# -----------------------------------------------------------------------------
+# INPUT METADATA
+# CSV file mapping sample IDs to sequencing metadata (flowcell, library, etc.)
+# See docs/metadata_format.md for the expected column schema.
+# -----------------------------------------------------------------------------
+
+initial_metadata_filepath="/path/to/metadata/file"
+
+
+# -----------------------------------------------------------------------------
+# GENOME PARAMETERS
+# Reference genome used for alignment and variant calling.
+# -----------------------------------------------------------------------------
+
+# Path to the reference genome FASTA (.fna / .fa)
+reference_genome="/path/to/reference/genome/file"
+
+# Short genome build name used in sub-directory naming (e.g. GRCr8)
+genome_shorthand="name_of_genome"
+
+
+# -----------------------------------------------------------------------------
+# STITCH IMPUTATION INPUTS
+# STITCH is used for low-coverage genotype imputation. These files define the
+# variant positions and haplotype reference panel it uses.
+# See: https://github.com/rwdavies/STITCH
+# -----------------------------------------------------------------------------
+
+# Directory of per-chromosome SNP position files
+positions_directory="/path/to/stitch/positions/directory"
+
+# Directory of per-chromosome haplotype reference panels
+reference_panels_directory="/path/to/stitch/reference/panel/directory"
+
+
+# -----------------------------------------------------------------------------
+# VARIANT EXCLUSION
+# Path to a file listing SNP IDs to exclude from analysis prior to QC filtering.
+# Typically used for known problematic or discordant variants from prior rounds.
+# -----------------------------------------------------------------------------
+
+novel_unknown_snps_filepath="/path/to/file/containing/snps/to/automatically/exclude"
+
+
+# -----------------------------------------------------------------------------
+# QUALITY CONTROL THRESHOLDS
+# Variants and samples failing these thresholds are excluded from final output.
+# -----------------------------------------------------------------------------
+
+# Minimum STITCH INFO score for a variant to be retained (range: 0-1)
+infoscore_threshold=0.9
+
+# Maximum minor allele frequency error rate allowed per variant
+mer_threshold=0.05
+
+# Maximum percent missingness allowed per sample before exclusion
+missingness_threshold=10
