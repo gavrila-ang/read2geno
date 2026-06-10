@@ -70,18 +70,21 @@ def parse_args(args):
 # === Load pipeline configurations ===
 def main():
 
+
     # === Print welcome message ===
     print(f"Welcome to the Palmer Lab Genotyping and Validation Pipeline!")
     print(f"Est. 2021")
     print("")
 
+
     # === Load command-line arguments ===
     args = parse_args(sys.argv[1:]) #[0] is pipeline.py
 
 
-    # === Run Step 1: Quality control of metadata file ===
+    # === Run Step 1: Perform quality control on metadata file ===
     if args.step == "1":
         subprocess.run(["conda", "run", "-n", conda_env, "python", f"{code}/01_metqc.py"], check=True)
+
 
     # === Run Step 2: Demultiplex library-level fastqs to sample-level fastqs ===
     elif args.step == "2":
@@ -110,7 +113,8 @@ def main():
                     "--wrap", shlex.join(["python", f"{code}/02_demux.py", str(array_val), str(ncpu), str(mpc)])
                     ], check=True)
 
-    # === Run Step 3: Clean sample-level fastqs, align to reference genome and test alignment quality ===
+
+    # === Run Step 3: Clean sample-level fastqs, align to reference genome and generate alignment QC metrics ===
     elif args.step == "3":
 
         # === Check if aligning arrays finished successfully ===
@@ -137,6 +141,8 @@ def main():
                     "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/03_sample_processing.py {idx} {ncpu} {mpc}'"
                     ], check=True)
 
+
+    # === Run Step 4: Plot alignment QC metrics, perform sample identity validation, and create input files for STITCH ===
     elif args.step == "4":
         run_type = "abv"
         gbs_sexqc_limit = 0.95
@@ -155,6 +161,8 @@ def main():
                 "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/04_alignqc.py {run_type} {gbs_sexqc_limit} {riptide_sexqc_limit} {skip_sexqc} {stitch_directory}'"
                 ], check=True)
 
+
+    # === Run Step 5: Perform STITCH-based imputation on alignment files ===
     elif args.step == "5":
 
         # STITCH user arguments
@@ -174,6 +182,7 @@ def main():
             f"{phased_gt}",
             shell=True
          )
+
 
     # === Run Step 6: Perform quality control on SNPs and samples and create a list of non-viable SNPs ===
     elif args.step == "6":
@@ -199,6 +208,7 @@ def main():
                 f"--exclude={exclude_nodes}",
                 "--wrap", f"bash -c 'source ~/.bashrc && conda activate {conda_env} && python {code}/06_snp_filter.py {chromvar} {stitch_directory} {outdir}'"
                 ], check=True)
+
 
     # === Run Step 7: Perform quality control on SNPs and samples and create a list of non-viable samples ===
     elif args.step == "7":
