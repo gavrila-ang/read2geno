@@ -12,7 +12,6 @@ A genotyping-by-imputation pipeline that turns low-coverage, short-read whole-ge
 
 ## Inputs & outputs
 
-| | |
 |---|---|
 | **In** | Illumina paired-end reads (FASTQ) · sample metadata sheet (CSV) · reference genome (FASTA) · SNP positions file · haplotype reference panel |
 | **Out** | Imputed, filtered genotypes in **VCF** and **PLINK 2** (`.pgen` / `.pvar` / `.psam`) · per-round QC metrics · publication figures · database-ready QC logs |
