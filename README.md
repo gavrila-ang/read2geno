@@ -6,7 +6,7 @@ A genotyping-by-imputation pipeline that turns low-coverage, short-read whole-ge
 
 - **Parallelised by chromosome.** STITCH can emit terabytes of imputed genotype data, and genome-wide imputation exhausted available RAM and triggered out-of-memory failures. Imputation now runs on chromosome chunks and downstream PLINK analyses run per chromosome, so each job processes a fraction of the genome and stays within its memory allocation as the sample population grows.
 - **Fault-tolerant array jobs.** Because of the scale it runs at, many stages are split across SLURM array tasks. Each stage has a dedicated *check* step that inspects array outputs and builds a *re-run* manifest containing only the incomplete tasks, so individual failures can be reprocessed without re-running the whole stage.
-- **Machine-learning sample validation.** A linear SVM predicts genetic sex from chrX/chrY read-depth and cross-checks it against the recorded sex in metadata, flagging mislabelled samples before they reach imputation.
+- **Machine learning-based sample validation.** A linear SVM predicts genetic sex from chrX/chrY read-depth and cross-checks it against the recorded sex in metadata, flagging mislabelled samples before they reach imputation.
 
 **NOTE** This is an internal lab pipeline: input metadata, sample sheets, and sequencing data are produced in-house by the lab's sequencing and database systems, so the repository ships without a bundled tutorial dataset. Configuration is fully templated, so the pipeline can be retargeted to other clusters, reference genomes, and cohorts.
 
