@@ -8,14 +8,6 @@ A genotyping-by-imputation pipeline that turns low-coverage, short-read whole-ge
 - **Fault-tolerant array jobs.** Because of the scale it runs at, many stages are split across SLURM array tasks. Each stage has a dedicated *check* step that inspects array outputs and builds a *re-run* manifest containing only the incomplete tasks, so individual failures can be reprocessed without re-running the whole stage.
 - **Machine-learning sample validation.** A linear SVM predicts genetic sex from chrX/chrY read-depth and cross-checks it against the recorded sex in metadata, flagging mislabelled samples before they reach imputation.
 
-## Data Engineering Highlights
-
-- Due to the scale at which this pipeline is run, a number of steps are split across SLURM array tasks. The pipeline was rebuilt to be **fault-tolerant** and hasdedicated *check* steps to inspect these arrays and generate *re-run* manifests containing only incomplete tasks, so specific array failures are easy to rerun and doesn't require a full rerun. 
-- STITCH can emit terabytes of imputed genotype data and genome-wide imputation exhausted available RAM and triggered out-of-memory job failures. As such, to scale with our ever-growing sample population, imputation is now **parallelised** so that STITCH runs on chromosome chunks and downstream PLINK analyses runs per chromosome.
-- HS rat sample identity is verified using a **machine-learning** model. A linear SVM predicts genetic sex from chrX/chrY read-depth and cross-checks it against recorded sex in the metadata to flag mislabelled samples before they undergo imputation.
-
-This is an internal lab pipeline: input metadata and sequencing data are produced in-house by the lab's sequencing protocols and database systems, so the repository ships without a bundled tutorial dataset. Configuration is fully templated, so the pipeline can be retargeted to other clusters, reference genomes, and cohorts.
-
 ## Pipeline architecture
 
 ```mermaid
