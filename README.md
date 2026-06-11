@@ -1,12 +1,21 @@
 # read2geno
 
-A genotyping-by-imputation pipeline that turns low-coverage, short-read whole-genome sequencing into quality-controlled, imputed genotype calls for outbred [Heterogeneous Stock (HS) rats](https://ratgenes.org/). It runs on a SLURM-managed HPC and currently imputes ~11,000,000 SNPs across ~30,000 samples (and growing!).  fanning work out across per-sample and per-chromosome array jobs.
+A genotyping-by-imputation pipeline that turns low-coverage, short-read whole-genome sequencing into quality-controlled, imputed genotype calls for outbred [Heterogeneous Stock (HS) rats](https://ratgenes.org/). It runs on a SLURM-managed HPC and currently imputes ~11,000,000 SNPs across ~30,000 samples (and growing!).
 
 ## Data engineering highlights
 
 - **Parallelised by chromosome.** STITCH can emit terabytes of imputed genotype data, and genome-wide imputation exhausted available RAM and triggered out-of-memory failures. Imputation now runs on chromosome chunks and downstream PLINK analyses run per chromosome, so each job processes a fraction of the genome and stays within its memory allocation as the sample population grows.
 - **Fault-tolerant array jobs.** Because of the scale it runs at, many stages are split across SLURM array tasks. Each stage has a dedicated *check* step that inspects array outputs and builds a *re-run* manifest containing only the incomplete tasks, so individual failures can be reprocessed without re-running the whole stage.
 - **Machine-learning sample validation.** A linear SVM predicts genetic sex from chrX/chrY read-depth and cross-checks it against the recorded sex in metadata, flagging mislabelled samples before they reach imputation.
+
+**NOTE** This is an internal lab pipeline: input metadata, sample sheets, and sequencing data are produced in-house by the lab's sequencing and database systems, so the repository ships without a bundled tutorial dataset. Configuration is fully templated, so the pipeline can be retargeted to other clusters, reference genomes, and cohorts.
+
+## Inputs & outputs
+
+| | |
+|---|---|
+| **In** | Illumina paired-end reads (FASTQ) · sample metadata sheet (CSV) · reference genome (FASTA) · SNP positions file · haplotype reference panel |
+| **Out** | Imputed, filtered genotypes in **VCF** and **PLINK 2** (`.pgen` / `.pvar` / `.psam`) · per-round QC metrics · publication figures · database-ready QC logs |
 
 ## Pipeline architecture
 
@@ -25,9 +34,6 @@ flowchart TD
 ```
 
 Each numbered stage is an independently runnable step (`python pipeline.py --step N`). "Check" sub-steps inspect the outputs of parallelised array jobs and rebuild a re-run list of only the tasks that failed or did not complete, so partial failures are cheap and easy to recover from.
-
-**Input:** Illumina paired-end reads (FASTQ), a sample metadata sheet, a reference genome (FASTA), a SNP positions file, and a haplotype reference panel.
-**Output:** Imputed, filtered genotypes in **VCF** and **PLINK 2** (`.pgen/.pvar/.psam`), SNP and sample QC metrics, report figures, and database-ready QC logs.
 
 ## Pipeline stages
 
